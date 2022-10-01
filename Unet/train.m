@@ -4,10 +4,10 @@ encoderDepth = 4;
 lgraph = unetLayers(imageSize,numClasses,'EncoderDepth',encoderDepth)
 %plot(lgraph)
 
-imds   = imageDatastore('D:\temp'...
+imds   = imageDatastore('dataset\'...
                         ,'IncludeSubfolders',true, 'LabelSource','foldernames');
 
-dataSetDir = fullfile('D:\temp');
+dataSetDir = fullfile('dataset');
 imageDir = fullfile(dataSetDir,'images');
 labelDir = fullfile(dataSetDir,'labels');
 imds = imageDatastore(imageDir);
