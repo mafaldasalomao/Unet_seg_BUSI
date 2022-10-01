@@ -1,11 +1,10 @@
+clear all; close all;
+%The width and height of the image must be a multiple of 2^EncoderDepth.
 imageSize = [224 224 3];
 numClasses = 2;
-encoderDepth = 4;
+encoderDepth = 5;
 lgraph = unetLayers(imageSize,numClasses,'EncoderDepth',encoderDepth)
 %plot(lgraph)
-
-imds   = imageDatastore('dataset\'...
-                        ,'IncludeSubfolders',true, 'LabelSource','foldernames');
 
 dataSetDir = fullfile('dataset');
 imageDir = fullfile(dataSetDir,'images');
@@ -16,13 +15,19 @@ labelIDs   = [1 0];
 pxds = pixelLabelDatastore(labelDir,classNames,labelIDs);
 ds = combine(imds,pxds);
 options = trainingOptions('sgdm', ...
-    'MiniBatchSize',10,...
+    'MiniBatchSize',7,...
     'InitialLearnRate',1e-3, ...
-    'MaxEpochs',5, ...
-    'VerboseFrequency',10);
+    'MaxEpochs',100,...
+    'Plots','training-progress');
 
 net = trainNetwork(ds,lgraph,options)
 
 %imageDS.ReadFcn = @customReadDatastoreImage;
 
+I = imread("dataset\images\benign (1).png");
+C = semanticseg(I,net);
+B = labeloverlay(I,C);
+figure
+
+imshow(B)
 
